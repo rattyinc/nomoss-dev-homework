@@ -25,6 +25,9 @@ class MovieController extends AbstractController
 		));
 	}
 
+	/**
+	 * @Route("/import_movies_once", name="_import_movies_once")
+	 */
 	function importMovieData() {
 		$entityManager = $this->getDoctrine()->getManager();
 		$ch = curl_init();
@@ -89,6 +92,8 @@ class MovieController extends AbstractController
 			$entityManager->persist($movieEntity);
 			$entityManager->flush();
 		}
+		$html = "Yay, pls don't access this endpoint again. Go to <a href='/movie'> here </a>";
+		return new Response($html);
 	}
 
 	/**
