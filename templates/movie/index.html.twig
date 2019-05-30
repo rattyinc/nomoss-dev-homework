@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MovieController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+ <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script>
+	function rateMovie(id) {
+		var rating = $("#rating-"+id).val();
+		var data = {
+            movieId: id,
+            rating: rating,
+        }
+		$.ajax({
+            type: "POST",
+            url: "/rate_movie",
+            data: data,
+            dataType: "html",
+            success: function (view) {
+            	location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                alert('Something went wrong, please check the console');
+                $('.loading').addClass('hidden');
+            }
+        });
+	}
+</script>
+
+<div class="example-wrapper">
+	{# {{dump(directors)}} #}
+	{# {{dump(genres)}} #}
+	{# {{dump(movies)}} #}
+    <h1>Hello {{ controller_name }}! ✅</h1>
+    <table>
+		<tr>
+		    <td>
+		        NAME
+		    </td>
+
+		    <td>
+		        DIRECTOR
+		    </td>
+
+		    <td>
+		        RATING
+		    </td>
+		</tr>
+		{% for item in movies %}
+		<tr>
+		    <td>
+		        {{item.name}}
+		    </td>
+
+		    <td>
+		        {{item.director}}
+		    </td>
+
+		    <td>
+		    	{% if item.rating is null %}
+		    		<select id="rating-{{item.id}}" name="ratings">
+			    		<option value="0" selected>No rating</option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+					</select> <button onclick="rateMovie({{item.id}})"> Rate </button>
+				{% else %}
+			        {{item.rating}}
+		    	{% endif %}
+		    </td>
+		   </tr>
+		{% endfor %}
+	</table>
+    This friendly message is coming from:
+    <ul>
+        <li>Your controller at <code><a href="{{ '/Users/nathan/Development/my-project/src/Controller/MovieController.php'|file_link(0) }}">src/Controller/MovieController.php</a></code></li>
+        <li>Your template at <code><a href="{{ '/Users/nathan/Development/my-project/templates/movie/index.html.twig'|file_link(0) }}">templates/movie/index.html.twig</a></code></li>
+    </ul>
+</div>
+{% endblock %}
